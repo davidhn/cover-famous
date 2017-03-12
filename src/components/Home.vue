@@ -1,5 +1,9 @@
 <template>
-<div>
+<div> 
+
+  <div class='video-container'>
+    <iframe style="width:40vw;height: 100px" src="https://www.youtube.com/embed/WHRusqtzDQQ" allowfullscreen></iframe>
+  </div>
 
   <div class='header-container'>
     <div class='banner-image'>
@@ -15,7 +19,7 @@
   <md-tabs md-fixed class='md-transparent'>
     
     <md-tab id="top-covers" md-label="top covers">
-
+      
       <div class='card' v-for="cover in topCovers">
         <div class='card_rank'>{{ cover.rank }}</div>
         <div class='card_img' 
@@ -25,7 +29,9 @@
           <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.viewsYT }}</div>
         </div>
         <div class='card-votes'>
-          <md-icon>thumb_up</md-icon>
+          <md-button class="md-icon-button">
+            <md-icon>thumb_up</md-icon>
+          </md-button>
           <div>293</div>  
         </div>
       </div>
@@ -52,7 +58,7 @@ export default {
   name: 'home',
   data () {
     return {
-      songName: 'Ordinary Life',
+      songName: 'Starboy',
       songArtist: 'The Weeknd',
       video: '//www.youtube.com/embed/Q8TXgCzxEnw?rel=0',
       albumCover: '../assets/weeknd_album_cover.jpg',
@@ -129,15 +135,6 @@ let topCovers = [
 <!-- Add 'scoped' attribute to limit CSS to this component only -->
 <style scoped>
 
-.vid-container {
-  margin-top: 24px;
-}
-
-iframe {
-  height: 480px !important;
-  margin-top: 24px;
-}
-
 .header-container {
   position: relative;
 }
@@ -154,7 +151,7 @@ iframe {
 .banner-info {
   position: absolute;
   bottom: 24px;
-  left: 24px;
+  left: 18px;
   color: white;
   text-align: left;
 }
@@ -183,7 +180,7 @@ iframe {
 }
 
 .card_rank {
-  flex: 0 0 40px;
+  flex: 0 0 50px;
   font-size: 24px;
   padding-top: 26px;
 }
@@ -197,7 +194,7 @@ iframe {
 
 .card-info {
   text-align: left;
-  padding: 4px 8px 6px 8px;
+  padding: 8px 0px 6px 12px;
   flex: 1;
 }
 
@@ -217,8 +214,16 @@ iframe {
 }
 
 .card-votes {
-  flex: 0 0 55px;
-  margin-top: 15px;
+  flex: 0 0 50px;
+  margin-top: 6px;
+  padding-right: 8px;
+}
+
+.video-container {
+  position: fixed;
+  bottom: 8px;
+  right: 8px;
+  z-index: 9999;
 }
 
 
