@@ -1,7 +1,7 @@
 <template>
 <div> 
 
-  <div class='video-container'>
+  <div id='video-container'>
     <iframe style="width:40vw;height: 100px" src="https://www.youtube.com/embed/WHRusqtzDQQ" allowfullscreen></iframe>
   </div>
 
@@ -20,19 +20,19 @@
     
     <md-tab id="top-covers" md-label="top covers">
       
-      <div class='card' v-for="cover in topCovers">
+      <div class='card' v-for="cover in topCovers" v-on:click='playSong(cover.youtube_video_id)'>
         <div class='card_rank'>{{ cover.rank }}</div>
         <div class='card_img' 
-             :style="{ 'background-image' : 'url(' + cover.image + ')' }"></div>
+                :style="{ 'background-image' : 'url(' + cover.profile_photo + ')' }"></div>
         <div class='card-info'>
-          <div class='card-artist'>{{ cover.name }}</div>
-          <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.viewsYT }}</div>
+            <div class='card-artist'>{{ cover.name }}</div>
+            <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.view_count_display }}</div>
         </div>
         <div class='card-votes'>
-          <md-button class="md-icon-button">
+            <md-button class="md-icon-button">
             <md-icon>thumb_up</md-icon>
-          </md-button>
-          <div>293</div>  
+            </md-button>
+            <div>293</div>  
         </div>
       </div>
 
@@ -62,73 +62,33 @@ export default {
       songArtist: 'The Weeknd',
       video: '//www.youtube.com/embed/Q8TXgCzxEnw?rel=0',
       albumCover: '../assets/weeknd_album_cover.jpg',
-      topCovers: topCovers,
+      topCovers: [],
+    }
+  },
+  created() {
+    this.$http.get('http://localhost:3000/cover_songs')
+      .then(response => {
+        let coverSongs = response.body.coverSongsList;
+        let sortedList = coverSongs.sort( (a,b) => {
+          return b.view_count - a.view_count
+        })
+        this.topCovers = sortedList;
+      })
+  },
+  methods: {
+    playSong: (songId) => {
+      console.log(songId);
+      let vidUrl = 'https://www.youtube.com/embed/' + songId;
+      console.log(vidUrl)
+      let vidContainer = document.getElementById('video-container');
+      vidContainer.innerHTML = 
+        '<iframe style="width:40vw;height: 100px" src="'+vidUrl+'" allowfullscreen></iframe>';
+      
+
     }
   }
 }
 
-let topCovers = [
-  {
-    rank: 1,
-    name: 'Conor Maynard',
-    viewsYT: '2.5m',
-    image: 'https://media.ents24network.com/image/000/131/298/4033cdf48b64df1b503070fa2d80a94198c65cf7.jpg'
-  },
-  {
-    rank: 2,
-    name: 'William Singe',
-    viewsYT: '2.2m',
-    image: 'http://marriedwiki.com/uploads/bio/william-singe.jpg'
-  },
-  {
-    rank: 3,
-    name: 'Boyce Avenue',
-    viewsYT: '805k',
-    image: 'https://www.cardiffstudents.com/asset/Event/7552/VoiceAvenue-7.jpg'
-  },
-  {
-    rank: 4,
-    name: 'Alex Aiono',
-    viewsYT: '402k',
-    image: 'https://s-media-cache-ak0.pinimg.com/736x/d5/08/5c/d5085c3f4a0337bd31d71393c8d1d0f9.jpg'
-  },
-  {
-    rank: 5,
-    name: 'Kurt Hugo Schneider',
-    viewsYT: '200k',
-    image: 'http://www.kurthugoschneider.com/wp-content/uploads/2013/07/kurthugoschneider-1.jpg'
-  },
-  {
-    rank: 6,
-    name: 'Conor Maynard',
-    viewsYT: '2.5m',
-    image: 'https://media.ents24network.com/image/000/131/298/4033cdf48b64df1b503070fa2d80a94198c65cf7.jpg'
-  },
-  {
-    rank: 7,
-    name: 'William Singe',
-    viewsYT: '2.2m',
-    image: 'http://marriedwiki.com/uploads/bio/william-singe.jpg'
-  },
-  {
-    rank: 8,
-    name: 'Boyce Avenue',
-    viewsYT: '805k',
-    image: 'https://www.cardiffstudents.com/asset/Event/7552/VoiceAvenue-7.jpg'
-  },
-  {
-    rank: 9,
-    name: 'Alex Aiono',
-    viewsYT: '402k',
-    image: 'https://s-media-cache-ak0.pinimg.com/736x/d5/08/5c/d5085c3f4a0337bd31d71393c8d1d0f9.jpg'
-  },
-  {
-    rank: 10,
-    name: 'Kurt Hugo Schneider',
-    viewsYT: '200k',
-    image: 'http://www.kurthugoschneider.com/wp-content/uploads/2013/07/kurthugoschneider-1.jpg'
-  },
-];
 
 </script>
 
@@ -219,7 +179,7 @@ let topCovers = [
   padding-right: 8px;
 }
 
-.video-container {
+#video-container {
   position: fixed;
   bottom: 8px;
   right: 8px;
