@@ -10,10 +10,13 @@
             <md-option value="fight_club">Pop</md-option>
             <md-option value="fight_club">Acoustic</md-option>
             <md-option value="pulp_fiction">Hip-Hop</md-option>
+            <md-option value="pulp_fiction">Baby Making Music</md-option>
             <md-option value="godfather_ii">Rock</md-option>
             <md-option value="godfather_iii">Violin</md-option>
             <md-option value="godfellas">Beatbox</md-option>
             <md-option value="godfather">Soul</md-option>
+            <md-option value="godfather">Collab</md-option>
+            <md-option value="godfather">Mashup</md-option>
           </md-select>
         </md-input-container>
       </md-layout>
