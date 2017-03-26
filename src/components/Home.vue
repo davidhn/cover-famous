@@ -20,8 +20,8 @@
     
     <md-tab id="top-covers" md-label="top covers">
       
-      <div class='card' v-for="cover in topCovers" v-on:click='playSong(cover.youtube_video_id)'>
-        <div class='card_rank'>{{ cover.rank }}</div>
+      <div class='card' v-for="(cover, index) in topCovers" v-on:click='playSong(cover.youtube_video_id, $event)'>
+        <div class='card_rank'>{{ index + 1 }}</div>
         <div class='card_img' 
                 :style="{ 'background-image' : 'url(' + cover.profile_photo + ')' }"></div>
         <div class='card-info'>
@@ -39,11 +39,11 @@
     </md-tab>
 
     <md-tab id="discover" md-label="discover">
-      <p>Discover</p>
+      <discover-tab-content></discover-tab-content>
     </md-tab>
 
     <md-tab id="comments" md-label="comments">
-      <p>Comments</p>
+      <comments-tab-content></comments-tab-content>
     </md-tab>
 
   </md-tabs>
@@ -53,6 +53,9 @@
 </template>
 
 <script>
+
+import Discover from './Discover.vue'
+import Comments from './Comments.vue'
 
 export default {
   name: 'home',
@@ -72,21 +75,25 @@ export default {
         let sortedList = coverSongs.sort( (a,b) => {
           return b.view_count - a.view_count
         })
-        this.topCovers = sortedList;
+        this.topCovers = sortedList.splice(0,10);
       })
   },
   methods: {
-    playSong: (songId) => {
-      console.log(songId);
+    playSong: (songId, event) => {
       let vidUrl = 'https://www.youtube.com/embed/' + songId;
-      console.log(vidUrl)
       let vidContainer = document.getElementById('video-container');
       vidContainer.innerHTML = 
         '<iframe style="width:40vw;height: 100px" src="'+vidUrl+'" allowfullscreen></iframe>';
-      
-
+      let target = event.target;
+      console.log(target);
+      let card = $(target).closest('card');
+      console.log(card)
     }
-  }
+  },
+  components: {
+    'discover-tab-content': Discover,
+    'comments-tab-content': Comments
+  },
 }
 
 
@@ -101,7 +108,7 @@ export default {
 
 .banner-image {
   background-image: url(../assets/weeknd_album_cover.jpg);
-  height: 200px;
+  height: 30vh;
   background-position: left;
   background-size: cover;
   opacity: .75;
@@ -127,6 +134,7 @@ export default {
 
 #top-covers {
   padding:0;
+  padding-top: 8px;
   flex: 1;
   background: #f7f7f7;
 }
@@ -136,7 +144,7 @@ export default {
   display: flex;
   height: 75px;
   background: white;
-  margin-top: 8px;
+  margin-bottom: 8px;
 }
 
 .card_rank {
@@ -184,6 +192,10 @@ export default {
   bottom: 8px;
   right: 8px;
   z-index: 9999;
+}
+
+#discover {
+  padding-top: 0;
 }
 
 
