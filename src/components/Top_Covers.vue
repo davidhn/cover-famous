@@ -9,11 +9,11 @@
         <div class='card-artist'>{{ cover.name }}</div>
         <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.view_count_display }}</div>
     </div>
-    <div class='card-votes'>
-        <md-button class="md-icon-button">
+    <div class='card-votes' v-on:click='upVote($event)'>
+      <md-button class="md-icon-button" >
         <md-icon>thumb_up</md-icon>
-        </md-button>
-        <div>293</div>  
+      </md-button>
+      <div class='voteCount'>{{ voteCount }}</div>  
     </div>
   </div>
 
@@ -23,17 +23,20 @@
 
 <script>
 
+import axios from 'axios';
+
 export default {
   name: 'top_covers',
   data() {
     return {
-      topCovers: []
+      topCovers: [],
+      voteCount: 888
     }
   },
   created() {
-    this.$http.get('http://localhost:3000/cover_songs')
+    axios.get('http://localhost:3000/cover_songs')
       .then(response => {
-        let coverSongs = response.body.coverSongsList;
+        let coverSongs = response.data.coverSongsList;
         let sortedList = coverSongs.sort( (a,b) => {
           return b.view_count - a.view_count
         })
@@ -46,10 +49,9 @@ export default {
       let vidContainer = document.getElementById('video-container');
       vidContainer.innerHTML = 
         '<iframe style="width:40vw;height: 100px" src="'+vidUrl+'" allowfullscreen></iframe>';
-      let target = event.target;
-      console.log(target);
-      let card = $(target).closest('card');
-      console.log(card)
+    },
+    upVote: (event) => {
+      alert('This is a click event on the vote icon');
     }
   },
 }
@@ -106,5 +108,7 @@ export default {
   margin-top: 6px;
   padding-right: 8px;
 }
+
+
 
 </style>
