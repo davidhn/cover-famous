@@ -20,10 +20,11 @@
         class='user-menu md-icon-button'>
       <md-button md-menu-trigger>
         <md-avatar>
-          <img src="./assets/weeknd_album_cover.jpg">
+          <img :src="profile.picture">
         </md-avatar>
       </md-button>
       <md-menu-content>
+        <md-menu-item disabled>Hi {{ profile.given_name }}!</md-menu-item>
         <md-menu-item @selected="logout($event)">Logout</md-menu-item>
       </md-menu-content>
     </md-menu>
@@ -99,24 +100,29 @@ export default {
     return {
       authenticated: false,
       secretThing: '',
-      lock: new Auth0Lock('zHwziMmqMH29YPOiy41i3jjZDKY3lAM7', 'davidhn.auth0.com', options)
+      lock: new Auth0Lock('zHwziMmqMH29YPOiy41i3jjZDKY3lAM7', 'davidhn.auth0.com', options),
+      profile: {}
     }
   },
   mounted() {
     this.authenticated = checkAuth();
-    
+    this.profile = localStorage.profile ? JSON.parse(localStorage.profile) : {};
+    console.log(this.profile);
     this.lock.on('authenticated', (authResult) => {
       console.log('authenticated');
       localStorage.setItem('id_token', authResult.idToken);
-      this.lock.getProfile(authResult.idToken, (error, profile) => {
+      localStorage.setItem('accessToken', authResult.accessToken);
+      this.lock.getUserInfo(authResult.accessToken, (error, profile) => {
         if (error) {
           // Handle error
+          console.log('Error Getting Profile = ' + error);
           return;
         }
         // Set the token and user profile in local storage
         localStorage.setItem('profile', JSON.stringify(profile));
-
+        this.profile = profile;
         this.authenticated = true;
+        console.log(profile);
       });
     });
 
@@ -135,6 +141,7 @@ export default {
       // from local storage
       localStorage.removeItem('id_token');
       localStorage.removeItem('profile');
+      localStorage.removeItem('accessToken');
       this.authenticated = false;
     },
     toggleLeftSidenav() {
@@ -167,5 +174,8 @@ export default {
   border-radius: 50px;
 }
 
+.md-snackbar-container {
+  background-color: #8BC34A
+}
 
 </style>

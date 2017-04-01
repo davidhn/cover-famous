@@ -1,5 +1,5 @@
 <template>
-<div>
+<div id='top_covers'>
 
   <div class='card' v-for="(cover, index) in topCovers" v-on:click='playSong(cover.youtube_video_id, $event)'>
     <div class='card_rank'>{{ index + 1 }}</div>
@@ -7,15 +7,46 @@
             :style="{ 'background-image' : 'url(' + cover.profile_photo + ')' }"></div>
     <div class='card-info'>
         <div class='card-artist'>{{ cover.name }}</div>
+        <div class='card-yt-genre' style='color:grey'> pop, beatbox </div>
         <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.view_count_display }}</div>
     </div>
-    <div class='card-votes' v-on:click='upVote($event)'>
-      <md-button class="md-icon-button" >
+    <!--<div class='card-votes' v-on:click='upVote(cover.cover_song_id, cover.song_id, $event)'>-->
+    <div class='card-votes' v-on:click="openDialog('dialog1')" id='custom'>
+      <md-button class="md-icon-button">
         <md-icon>thumb_up</md-icon>
       </md-button>
-      <div class='voteCount'>{{ voteCount }}</div>  
+      <div class='voteCount'>{{ cover.vote_count }}</div>  
     </div>
   </div>
+
+<md-dialog md-open-from="#custom" md-close-to="#custom" ref="dialog1">
+  
+  <md-dialog-content>
+    <div>
+      <md-avatar>
+        <img :src="topCovers[0].profile_photo" alt="Cover Artist Name">
+      </md-avatar>
+      <div class="dialog-artist-container">
+        <div class='dialog-coverartist'>Conor Maynard</div>
+        <div class='dialog-song'>Starboy - Weeknd</div>
+      </div>
+    </div>
+    <h5>Why is this cover awesome?</h5>
+    <md-chip v-for='tag in songTags' @click.native='selectTag($event)'>{{ tag }}</md-chip>
+  </md-dialog-content>
+
+  <md-dialog-actions>
+    <md-button 
+      class="md-warn md-raised" 
+      @click.native="closeDialog('dialog1')">
+      ...and that is why it's awesome
+    </md-button>
+  </md-dialog-actions>
+</md-dialog>
+
+  <md-snackbar md-position="bottom center" ref="snackbar" md-duration="4000">
+    <span>Thank you! Conor Maynard is one vote closer to being Cover Famous!</span>
+  </md-snackbar>
 
 </div>
 </template>
@@ -30,7 +61,16 @@ export default {
   data() {
     return {
       topCovers: [],
-      voteCount: 888
+      songTags: [
+        'Better Than The Original', 
+        'So Creative', 
+        'Song Is LIT', 
+        'Baby-Making Music', 
+        'Amazing Voice', 
+        'Sick Beat', 
+        'They Are So Hot',
+        'That Music Video'
+      ]
     }
   },
   created() {
@@ -45,13 +85,50 @@ export default {
   },
   methods: {
     playSong: (songId, event) => {
-      let vidUrl = 'https://www.youtube.com/embed/' + songId;
+      let vidUrl = 'https://www.youtube.com/embed/' + songId + '?autoplay=1';
       let vidContainer = document.getElementById('video-container');
       vidContainer.innerHTML = 
-        '<iframe style="width:40vw;height: 100px" src="'+vidUrl+'" allowfullscreen></iframe>';
+        `<iframe  
+          src='${vidUrl}'
+          frameborder='0'
+          allowfullscreen
+          style="width:100vw;height: 30vh">
+        </iframe>`;
     },
-    upVote: (event) => {
-      alert('This is a click event on the vote icon');
+    openDialog(ref) {
+      this.$refs[ref].open();
+    },
+    closeDialog(ref) {
+      console.log(ref);
+      this.$refs[ref].close();
+      this.$refs.snackbar.open();
+    },
+    onOpen() {
+      console.log('Opened');
+    },
+    onClose(type) {
+      console.log('Closed', type);
+    },
+    selectTag: (event) => {
+      console.log(event.target);
+      let tag = $(event.target);
+      if (tag.hasClass('selected-tag')) { tag.removeClass('selected-tag') } 
+      else { tag.addClass('selected-tag') }
+    },
+    upVote: (cover_song_id, song_id, event) => {
+      console.log(localStorage.profile.user_id);
+      console.log(cover_song_id);
+      axios.post('http://localhost:3000/cover_song_vote', {
+        cover_artist_song_id: cover_song_id,
+        user_id: JSON.parse(localStorage.profile).user_id,
+        song_id: song_id
+      })
+      .then(function (response) {
+        console.log(response);
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
     }
   },
 }
@@ -86,14 +163,24 @@ export default {
   text-align: left;
   padding: 8px 0px 6px 12px;
   flex: 1;
+  overflow: hidden;
+  white-space: nowrap;
 }
 
 .card-artist {
-  font-size: 1.2em
+  font-size: 1.1em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.card-yt-genre {
+  font-size: .8em;
+  color: grey;
 }
 
 .card-yt-views {
-  font-size: .8em
+  font-size: .8em;
+  color: grey;
 }
 
 .card-view-icon {
@@ -109,6 +196,39 @@ export default {
   padding-right: 8px;
 }
 
+.card-votes i {
+  color: grey
+}
+
+.md-chip {
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+
+.dialog-artist-container {
+  display: inline-block;
+  vertical-align: middle;
+  padding-left: 12px;
+}
+
+.dialog-coverartist {
+  font-size: 1.2em
+}
+
+.dialog-song {
+  font-size: .9em;
+  color: grey
+}
+
+.selected-tag {
+  background-color: #FF7043 !important;
+  color: white;
+}
+
+.md-dialog-actions {
+  justify-content: flex-start;
+  margin-bottom: 12px;
+}
 
 
 </style>

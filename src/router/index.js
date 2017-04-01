@@ -13,14 +13,14 @@ Vue.use(VueMaterial)
 Vue.use(JqueryComments);
 
 const routes = [
-{
-  path: '/',
-  component: Home,
-},
-{
-  path: '/song',
-  component: CoverSong
-}
+  {
+    path: '/',
+    component: Home,
+  },
+  {
+    path: '/song',
+    component: CoverSong
+  }
 ]
 
 export default new Router({

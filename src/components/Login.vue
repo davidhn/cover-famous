@@ -18,7 +18,6 @@ let options = {
   allowedConnections: ['facebook', 'google-oauth2'],
   theme: {
     logo: 'http://www.almostfamousburgers.com/images/logos/AlmostFamousLogo.png',
-
   }
 }
 
@@ -40,11 +39,11 @@ export default {
       this.lock.getProfile(authResult.idToken, (error, profile) => {
         if (error) {
           // Handle error
+          console.log('error = ' + error);
           return;
         }
         // Set the token and user profile in local storage
         localStorage.setItem('profile', JSON.stringify(profile));
-
         this.authenticated = true;
       });
     });
@@ -56,6 +55,7 @@ export default {
   methods: {
     login() {
       this.lock.show();
+      
     },
     logout() {
       // To log out, we just need to remove the token and profile

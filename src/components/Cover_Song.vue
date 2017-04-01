@@ -1,20 +1,15 @@
 <template>
 <div> 
 
-  <div id='video-container'>
-    <iframe style="width:40vw;height: 100px" src="https://www.youtube.com/embed/WHRusqtzDQQ" allowfullscreen></iframe>
-  </div>
-
   <div class='header-container'>
+    <div id='video-container'></div>
     <div class='banner-image'>
       <div class='banner-info'>
         <span class="md-title">{{ songName }}</span> <br>
         <span class="md-subheading">{{ songArtist }}</span>
       </div>
     </div>
-    <!--<iframe width='854' height='480' :src='video' frameborder='0' allowfullscreen></iframe>-->
   </div>
-
 
   <md-tabs md-fixed class='md-transparent'>
     
@@ -105,10 +100,8 @@ export default {
 }
 
 #video-container {
-  position: fixed;
-  bottom: 8px;
-  right: 8px;
-  z-index: 9999;
+  position: absolute;
+  z-index: 1;
 }
 
 
