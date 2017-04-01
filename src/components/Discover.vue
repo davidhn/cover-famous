@@ -6,28 +6,29 @@
       <md-layout>
         <md-input-container>
           <label for="movie">Cover Type</label>
-          <md-select name="cover-type" id="cover-type">
-            <md-option value="fight_club">Pop</md-option>
-            <md-option value="fight_club">Acoustic</md-option>
-            <md-option value="pulp_fiction">Hip-Hop</md-option>
-            <md-option value="pulp_fiction">Baby Making Music</md-option>
-            <md-option value="godfather_ii">Rock</md-option>
-            <md-option value="godfather_iii">Violin</md-option>
-            <md-option value="godfellas">Beatbox</md-option>
-            <md-option value="godfather">Soul</md-option>
-            <md-option value="godfather">Collab</md-option>
-            <md-option value="godfather">Mashup</md-option>
+          <md-select name="cover-type" id="cover-type" v-model="coverType">
+            <md-option value="all">All</md-option>
+            <md-option value="collab">Collab</md-option>
+            <md-option value="mashup">Mashup</md-option>
+            <md-option value="pop">Pop</md-option>
+            <md-option value="acoustic">Acoustic</md-option>
+            <md-option value="rnb_soul">R&B / Soul</md-option>
+            <md-option value="violin">Violin</md-option>
+            <md-option value="piano">Piano</md-option>
+            <md-option value="beatbox">Beatbox</md-option>
+            <md-option value="rock">Rock</md-option>
           </md-select>
         </md-input-container>
       </md-layout>
       <md-layout>
         <md-input-container>
           <label for="country">Sort By</label>
-          <md-select name="sort-by" id="sort-by" >
-            <md-option value="united_states">Cover Famous Likes</md-option>
-            <md-option value="australia">Cover Artist Name</md-option>
-            <md-option value="brazil">YouTube Views</md-option>
-            <md-option value="japan">YouTube Likes</md-option>
+          <md-select name="sort-by" id="sort-by" v-model='sortBy'>
+            <md-option value="random">Random</md-option>
+            <md-option value="cover_famous_likes">Cover Famous Likes</md-option>
+            <md-option value="cover_artist_name">Cover Artist Name</md-option>
+            <md-option value="youtube_views">YouTube Views</md-option>
+            <md-option value="youtube_likes">YouTube Likes</md-option>
           </md-select>
         </md-input-container>
       </md-layout>
@@ -62,9 +63,10 @@ export default {
   name: 'discover',
   data () {
     return {
-      msg: 'Discover new cover songs and artists.',
+      sortBy: 'random',
+      coverType: 'all',
       coverSongs: [],
-      voteCount: 999
+      voteCount: 999,
     }
   },
   created() {
