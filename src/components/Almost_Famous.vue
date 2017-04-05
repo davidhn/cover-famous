@@ -5,14 +5,14 @@
     <md-layout md-gutter='24'>
       <md-layout>
         <md-input-container>
-          <label for="movie">Cover Type</label>
-          <md-select name="cover-type" id="cover-type" v-model="coverType">
+          <label for="movie">Filter By</label>
+          <md-select name="cover-type" id="filter-by" v-model="filterBy">
             <md-option value="all">All</md-option>
             <md-option value="collab">Collab</md-option>
             <md-option value="mashup">Mashup</md-option>
             <md-option value="pop">Pop</md-option>
             <md-option value="acoustic">Acoustic</md-option>
-            <md-option value="rnb_soul">R&B / Soul</md-option>
+            <md-option value="rnb_soul">RnB</md-option>
             <md-option value="violin">Violin</md-option>
             <md-option value="piano">Piano</md-option>
             <md-option value="beatbox">Beatbox</md-option>
@@ -24,7 +24,7 @@
         <md-input-container>
           <label for="country">Sort By</label>
           <md-select name="sort-by" id="sort-by" v-model='sortBy'>
-            <md-option value="random">Random</md-option>
+            <md-option value="trending">Trending</md-option>
             <md-option value="cover_famous_likes">Cover Famous Likes</md-option>
             <md-option value="cover_artist_name">Cover Artist Name</md-option>
             <md-option value="youtube_views">YouTube Views</md-option>
@@ -36,18 +36,23 @@
   </div>
 
   <div class='card' v-for="(cover, index) in coverSongs" v-on:click='playSong(cover.youtube_video_id, $event)'>
-    <div class='card_rank'></div>
+    <!--<div class='card_rank'>{{ index + 1 }}</div>-->
     <div class='card_img' 
             :style="{ 'background-image' : 'url(' + cover.profile_photo + ')' }"></div>
     <div class='card-info'>
-        <div class='card-artist'>{{ cover.name }}</div>
+        <div class='card-artist'>
+          <!--<md-icon>volume_up</md-icon> -->
+          {{ cover.name }}
+        </div>
+        <div class='card-song-tags'> {{ cover.tags }}</div>
         <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.view_count_display }}</div>
     </div>
-    <div class='card-votes' v-on:click='upVote($event)'>
-      <md-button class="md-icon-button" >
+    <!--<div class='card-votes' v-on:click='upVote(cover.cover_song_id, cover.song_id, $event)'>-->
+    <div class='card-votes' v-on:click="openDialog('dialog1')" id='custom'>
+      <md-button class="md-icon-button">
         <md-icon>thumb_up</md-icon>
       </md-button>
-      <div class='voteCount'>{{ voteCount }}</div>  
+      <div class='voteCount'>{{ cover.vote_count }}</div>  
     </div>
   </div>
   
@@ -60,11 +65,11 @@
 import axios from 'axios';
 
 export default {
-  name: 'discover',
+  name: 'almost_famous',
   data () {
     return {
-      sortBy: 'random',
-      coverType: 'all',
+      filterBy: 'all',
+      sortBy: 'trending',
       coverSongs: [],
       voteCount: 999,
     }
@@ -114,7 +119,7 @@ export default {
 }
 
 .card-artist {
-  font-size: 1.2em
+  font-size: 1.1em
 }
 
 .card-yt-views {
@@ -132,6 +137,10 @@ export default {
   flex: 0 0 50px;
   margin-top: 6px;
   padding-right: 8px;
+}
+
+#almost-famous {
+  padding: 0;
 }
 
 

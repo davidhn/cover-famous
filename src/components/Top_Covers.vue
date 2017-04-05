@@ -6,8 +6,11 @@
     <div class='card_img' 
             :style="{ 'background-image' : 'url(' + cover.profile_photo + ')' }"></div>
     <div class='card-info'>
-        <div class='card-artist'>{{ cover.name }}</div>
-        <div class='card-yt-genre' style='color:grey'> pop, beatbox </div>
+        <div class='card-artist'>
+          <!--<md-icon>volume_up</md-icon> -->
+          {{ cover.name }}
+        </div>
+        <div class='card-song-tags'> {{ cover.tags }}</div>
         <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.view_count_display }}</div>
     </div>
     <!--<div class='card-votes' v-on:click='upVote(cover.cover_song_id, cover.song_id, $event)'>-->
@@ -19,30 +22,30 @@
     </div>
   </div>
 
-<md-dialog md-open-from="#custom" md-close-to="#custom" ref="dialog1">
-  
-  <md-dialog-content>
-    <div>
-      <md-avatar>
-        <img :src="topCovers[0].profile_photo" alt="Cover Artist Name">
-      </md-avatar>
-      <div class="dialog-artist-container">
-        <div class='dialog-coverartist'>Conor Maynard</div>
-        <div class='dialog-song'>Starboy - Weeknd</div>
+  <md-dialog md-open-from="#custom" md-close-to="#custom" ref="dialog1">
+    
+    <md-dialog-content>
+      <div>
+        <md-avatar>
+          <img src="../assets/weeknd_album_cover2.jpg" alt="Cover Artist Name">
+        </md-avatar>
+        <div class="dialog-artist-container">
+          <div class='dialog-coverartist'>Conor Maynard</div>
+          <div class='dialog-song'>Starboy - Weeknd</div>
+        </div>
       </div>
-    </div>
-    <h5>Why is this cover awesome?</h5>
-    <md-chip v-for='tag in songTags' @click.native='selectTag($event)'>{{ tag }}</md-chip>
-  </md-dialog-content>
+      <h5>This cover is...</h5>
+      <md-chip v-for='tag in songTags' @click.native='selectTag($event)'>{{ tag }}</md-chip>
+    </md-dialog-content>
 
-  <md-dialog-actions>
-    <md-button 
-      class="md-warn md-raised" 
-      @click.native="closeDialog('dialog1')">
-      ...and that is why it's awesome
-    </md-button>
-  </md-dialog-actions>
-</md-dialog>
+    <md-dialog-actions>
+      <md-button 
+        class="md-warn md-raised" 
+        @click.native="closeDialog('dialog1')">
+        ...and that is why it's awesome
+      </md-button>
+    </md-dialog-actions>
+  </md-dialog>
 
   <md-snackbar md-position="bottom center" ref="snackbar" md-duration="4000">
     <span>Thank you! Conor Maynard is one vote closer to being Cover Famous!</span>
@@ -173,9 +176,8 @@ export default {
   text-overflow: ellipsis;
 }
 
-.card-yt-genre {
+.card-song-tags {
   font-size: .8em;
-  color: grey;
 }
 
 .card-yt-views {

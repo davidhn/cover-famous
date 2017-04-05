@@ -11,14 +11,14 @@
     </div>
   </div>
 
-  <md-tabs md-fixed class='md-transparent'>
+  <md-tabs md-centered md-fixed class='md-transparent'>
     
-    <md-tab id="top-covers" md-label="top covers">
+    <md-tab id="top-covers" md-label="top 10">
       <top-covers-content></top-covers-content>
     </md-tab>
 
-    <md-tab id="discover" md-label="discover">
-      <discover-tab-content></discover-tab-content>
+    <md-tab id="almost-famous" md-label="almost famous">
+      <almost-famous-tab-content></almost-famous-tab-content>
     </md-tab>
 
     <md-tab id="comments" md-label="comments">
@@ -33,7 +33,7 @@
 
 <script>
 
-import Discover from './Discover.vue'
+import AlmostFamous from './Almost_Famous.vue'
 import Comments from './Comments.vue'
 import TopCovers from './Top_Covers.vue'
 
@@ -44,12 +44,12 @@ export default {
       songName: 'Starboy',
       songArtist: 'The Weeknd',
       video: '//www.youtube.com/embed/Q8TXgCzxEnw?rel=0',
-      albumCover: '../assets/weeknd_album_cover.jpg',
+      albumCover: '../assets/weeknd_album_cover2.jpg',
     }
   },
   components: {
     'top-covers-content': TopCovers,
-    'discover-tab-content': Discover,
+    'almost-famous-tab-content': AlmostFamous,
     'comments-tab-content': Comments
   },
 }
@@ -81,6 +81,10 @@ export default {
   text-align: left;
 }
 
+.md-tab-header-container {
+  font-size: .8em;
+}
+
 .md-tabs-content {
   background: #f7f7f7;
 }
@@ -95,7 +99,7 @@ export default {
   background: #f7f7f7;
 }
 
-#discover {
+#almost-famous {
   padding: 0;
 }
 
