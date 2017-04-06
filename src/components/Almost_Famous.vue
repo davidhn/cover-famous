@@ -1,5 +1,5 @@
 <template>
-<div>
+<div id='almost_famous'>
 
   <div class="field-group">
     <md-layout md-gutter='24'>
@@ -44,14 +44,15 @@
         <div class='card-song-tags'> {{ cover.tags }}</div>
         <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.view_count_display }}</div>
     </div>
-    <div class='card-votes' v-on:click="openDialog('dialog1')" id='custom'>
+    <div class='card-votes' 
+      v-on:click="triggerVoteModal(cover.youtube_channel_id)" 
+      :id='"af-" + cover.youtube_channel_id'>
       <md-button class="md-icon-button">
         <md-icon>thumb_up</md-icon>
       </md-button>
       <div class='voteCount'>{{ cover.vote_count }}</div>  
     </div>
   </div>
-  
 
 </div>
 </template>
@@ -80,6 +81,17 @@ export default {
       })
   },
   methods: {
+    playSong: (songId, event) => {
+      let vidUrl = 'https://www.youtube.com/embed/' + songId + '?autoplay=1';
+      let vidContainer = document.getElementById('video-container');
+      vidContainer.innerHTML = 
+        `<iframe  
+          src='${vidUrl}'
+          frameborder='0'
+          allowfullscreen
+          style="width:100vw;height: 30vh">
+        </iframe>`;
+    },
     filterCovers: function(filter) {
       this.coverSongs = this.unmutatedCoverSongs;
       if (filter !== 'All') {
@@ -113,7 +125,11 @@ export default {
           return 0;
         })
       }
-      // this.$nextTick(function() {})
+    },
+    triggerVoteModal(id) {
+      console.log('videoId = ' + id);
+      let coverId = `#af-${id}`;
+      this.$emit('emitVoteModal', coverId);
     },
   }
 }

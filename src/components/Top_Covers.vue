@@ -13,43 +13,15 @@
         <div class='card-song-tags'> {{ cover.tags }}</div>
         <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.view_count_display }}</div>
     </div>
-    <!--<div class='card-votes' v-on:click='upVote(cover.cover_song_id, cover.song_id, $event)'>-->
-    <div class='card-votes' v-on:click="openDialog('dialog1')" id='custom'>
+    <div class='card-votes' 
+      v-on:click="triggerVoteModal(cover.youtube_channel_id)" 
+      :id='"t10-" + cover.youtube_channel_id'>
       <md-button class="md-icon-button">
         <md-icon>thumb_up</md-icon>
       </md-button>
       <div class='voteCount'>{{ cover.vote_count }}</div>  
     </div>
   </div>
-
-  <md-dialog md-open-from="#custom" md-close-to="#custom" ref="dialog1">
-    
-    <md-dialog-content>
-      <div>
-        <md-avatar>
-          <img src="../assets/weeknd_album_cover2.jpg" alt="Cover Artist Name">
-        </md-avatar>
-        <div class="dialog-artist-container">
-          <div class='dialog-coverartist'>Conor Maynard</div>
-          <div class='dialog-song'>Starboy - Weeknd</div>
-        </div>
-      </div>
-      <h5>This cover is...</h5>
-      <md-chip v-for='tag in songTags' @click.native='selectTag($event)'>{{ tag }}</md-chip>
-    </md-dialog-content>
-
-    <md-dialog-actions>
-      <md-button 
-        class="md-warn md-raised" 
-        @click.native="closeDialog('dialog1')">
-        ...and that is why it's awesome
-      </md-button>
-    </md-dialog-actions>
-  </md-dialog>
-
-  <md-snackbar md-position="bottom center" ref="snackbar" md-duration="4000">
-    <span>Thank you! Conor Maynard is one vote closer to being Cover Famous!</span>
-  </md-snackbar>
 
 </div>
 </template>
@@ -64,16 +36,6 @@ export default {
   data() {
     return {
       topCovers: [],
-      songTags: [
-        'Better Than The Original', 
-        'So Creative', 
-        'Song Is LIT', 
-        'Baby-Making Music', 
-        'Amazing Voice', 
-        'Sick Beat', 
-        'They Are So Hot',
-        'That Music Video'
-      ]
     }
   },
   created() {
@@ -98,25 +60,10 @@ export default {
           style="width:100vw;height: 30vh">
         </iframe>`;
     },
-    openDialog(ref) {
-      this.$refs[ref].open();
-    },
-    closeDialog(ref) {
-      console.log(ref);
-      this.$refs[ref].close();
-      this.$refs.snackbar.open();
-    },
-    onOpen() {
-      console.log('Opened');
-    },
-    onClose(type) {
-      console.log('Closed', type);
-    },
-    selectTag: (event) => {
-      console.log(event.target);
-      let tag = $(event.target);
-      if (tag.hasClass('selected-tag')) { tag.removeClass('selected-tag') } 
-      else { tag.addClass('selected-tag') }
+    triggerVoteModal(id) {
+      console.log('videoId = ' + id);
+      let coverId = `#t10-${id}`;
+      this.$emit('emitVoteModal', coverId);
     },
     upVote: (cover_song_id, song_id, event) => {
       console.log(localStorage.profile.user_id);
@@ -200,36 +147,6 @@ export default {
 
 .card-votes i {
   color: grey
-}
-
-.md-chip {
-  margin-right: 4px;
-  margin-bottom: 4px;
-}
-
-.dialog-artist-container {
-  display: inline-block;
-  vertical-align: middle;
-  padding-left: 12px;
-}
-
-.dialog-coverartist {
-  font-size: 1.2em
-}
-
-.dialog-song {
-  font-size: .9em;
-  color: grey
-}
-
-.selected-tag {
-  background-color: #FF7043 !important;
-  color: white;
-}
-
-.md-dialog-actions {
-  justify-content: flex-start;
-  margin-bottom: 12px;
 }
 
 
