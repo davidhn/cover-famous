@@ -45,7 +45,7 @@
         <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.view_count_display }}</div>
     </div>
     <div class='card-votes' 
-      v-on:click="triggerVoteModal(cover.youtube_channel_id)" 
+      v-on:click="triggerVoteModal(index)" 
       :id='"af-" + cover.youtube_channel_id'>
       <md-button class="md-icon-button">
         <md-icon>thumb_up</md-icon>
@@ -126,10 +126,12 @@ export default {
         })
       }
     },
-    triggerVoteModal(id) {
-      console.log('videoId = ' + id);
-      let coverId = `#af-${id}`;
-      this.$emit('emitVoteModal', coverId);
+    triggerVoteModal(coverSongIndex) {
+      let selectedCoverSong = this.coverSongs[coverSongIndex];
+      let coverSongId = selectedCoverSong.youtube_channel_id;
+      console.log(selectedCoverSong);
+      let coverId = `#af-${coverSongId}`;
+      this.$emit('emitVoteModal', coverId, selectedCoverSong);
     },
   }
 }

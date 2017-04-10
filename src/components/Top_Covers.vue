@@ -13,8 +13,9 @@
         <div class='card-song-tags'> {{ cover.tags }}</div>
         <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.view_count_display }}</div>
     </div>
+      <!--v-on:click="triggerVoteModal(cover.youtube_channel_id)" -->
     <div class='card-votes' 
-      v-on:click="triggerVoteModal(cover.youtube_channel_id)" 
+      v-on:click="triggerVoteModal(index)" 
       :id='"t10-" + cover.youtube_channel_id'>
       <md-button class="md-icon-button">
         <md-icon>thumb_up</md-icon>
@@ -60,19 +61,27 @@ export default {
           style="width:100vw;height: 30vh">
         </iframe>`;
     },
-    triggerVoteModal(id) {
-      console.log('videoId = ' + id);
-      let coverId = `#t10-${id}`;
-      this.$emit('emitVoteModal', coverId);
+    triggerVoteModal(coverSongIndex) {
+      let selectedCoverSong = this.topCovers[coverSongIndex];
+      let coverSongId = selectedCoverSong.youtube_channel_id;
+      console.log(selectedCoverSong);
+      let coverId = `#t10-${coverSongId}`;
+      this.$emit('emitVoteModal', coverId, selectedCoverSong);
     },
-    upVote: (cover_song_id, song_id, event) => {
-      console.log(localStorage.profile.user_id);
-      console.log(cover_song_id);
+    // upVote: (cover_song_id, song_id, event) => {
+    upVote: function() {
+      // console.log(localStorage.profile.user_id);
+      // console.log(cover_song_id);
       axios.post('http://localhost:3000/cover_song_vote', {
-        cover_artist_song_id: cover_song_id,
-        user_id: JSON.parse(localStorage.profile).user_id,
-        song_id: song_id
+        cover_artist_song_id: 9,
+        user_id: 99,
+        song_id: 999
       })
+      // axios.post('http://localhost:3000/cover_song_vote', {
+      //   cover_artist_song_id: cover_song_id,
+      //   user_id: JSON.parse(localStorage.profile).user_id,
+      //   song_id: song_id
+      // })
       .then(function (response) {
         console.log(response);
       })

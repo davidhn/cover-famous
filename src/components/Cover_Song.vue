@@ -32,20 +32,20 @@
   </md-tabs>
   
   <md-dialog ref="voteModal"
-    :md-open-from="voteModal.modalSource" 
-    :md-close-to="voteModal.modalSource">
+    :md-open-from="voteModal.source" 
+    :md-close-to="voteModal.source">
   
     <md-dialog-content>
       <div>
         <md-avatar>
-          <img src="../assets/weeknd_album_cover2.jpg" alt="Cover Artist Name">
+          <img :src="voteModal.coverArtistImage" :alt="voteModal.coverArtist">
         </md-avatar>
         <div class="dialog-artist-container">
-          <div class='dialog-coverartist'>Conor Maynard</div>
-          <div class='dialog-song'>Starboy - Weeknd</div>
+          <div class='dialog-coverartist'>{{ voteModal.coverArtist }}</div>
+          <div class='dialog-song'>{{ songName }} - {{ songArtist }}</div>
         </div>
       </div>
-      <h5>This cover is...</h5>
+      <h5>I like this cover because...</h5>
       <md-chip 
         v-for='tag in voteModal.songTags' 
         @click.native='selectTag($event)'>
@@ -62,8 +62,8 @@
     </md-dialog-actions>
   </md-dialog>
 
-  <md-snackbar md-position="bottom center" ref="snackbar" md-duration="4000">
-    <span>Thank you! Conor Maynard is one vote closer to being Cover Famous!</span>
+  <md-snackbar md-position="bottom center" ref="snackbar" md-duration="5000">
+    <span>{{ voteModal.coverArtist }} is one vote closer to being Cover Famous!</span>
   </md-snackbar>
 
 </div>
@@ -74,21 +74,26 @@
 import AlmostFamous from './Almost_Famous.vue'
 import Comments from './Comments.vue'
 import TopCovers from './Top_Covers.vue'
+import axios from 'axios'
 
 export default {
   name: 'home',
   data () {
     return {
+      songId: 1,
       songName: 'Starboy',
       songArtist: 'The Weeknd',
       video: '//www.youtube.com/embed/Q8TXgCzxEnw?rel=0',
       albumCover: '../assets/weeknd_album_cover2.jpg',
       voteModal: {
-        modalSource: '',
+        source: '',
+        coverArtist: '',
+        coverAristImage: '',
+        coverSongId: '',
         songTags: [
           'Better Than The Original', 
           'So Creative', 
-          'Song Is LIT', 
+          'LIT', 
           'Baby-Making Music', 
           'Amazing Voice', 
           'Sick Beat', 
@@ -104,18 +109,37 @@ export default {
     'comments-tab-content': Comments,
   },
   methods: {
-    openDialog(modalSource) {
-      console.log('it hit event on parent');
-      console.log(modalSource);
-      this.voteModal.modalSource = modalSource; 
+    openDialog(source, selectedCoverSong) {
+      this.voteModal.source = source; 
+      this.voteModal.coverArtist = selectedCoverSong.name;
+      this.voteModal.coverArtistImage = selectedCoverSong.profile_photo;
+      this.voteModal.coverSongId = selectedCoverSong.cover_song_id;
       this.$nextTick(function () {
         this.$refs['voteModal'].open();
       })
     },
-    closeDialog(ref) {
-      console.log(ref);
-      this.$refs['voteModal'].close();
-      this.$refs.snackbar.open();
+    closeDialog() {
+      let currentUser = localStorage.getItem('profile');
+      let voteModal = this.$refs['voteModal'];
+      let confirmationMessage = this.$refs.snackbar;
+      let upVoteIcon = $(this.voteModal.source).find('i');
+      console.log(upVoteIcon);
+
+      axios.post('http://localhost:3000/cover_song_vote', {
+        cover_artist_song_id: this.voteModal.coverSongId,
+        user_id: JSON.parse(currentUser).user_id,
+        song_id: this.songId
+      })
+      .then(function (response) {
+        console.log(response);
+        voteModal.close();
+        confirmationMessage.open();
+        upVoteIcon.addClass('liked-song')
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+
     },
     onOpen() {
       console.log('Opened');
@@ -215,6 +239,10 @@ export default {
 .md-dialog-actions {
   justify-content: flex-start;
   margin-bottom: 12px;
+}
+
+.liked-song {
+  color: #e91e63 !important;
 }
 
 
