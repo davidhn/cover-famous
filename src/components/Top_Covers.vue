@@ -11,16 +11,18 @@
           {{ cover.name }}
         </div>
         <div class='card-song-tags'> {{ cover.tags }}</div>
-        <div class='card-yt-views'><md-icon class='card-view-icon'>visibility</md-icon> {{ cover.view_count_display }}</div>
+        <!--<div style='display: inline-block; font-size: .9em'>
+          <md-icon style='font-size: 14px; min-width: 14px; min-height: 20px; width: 14px; height: 20px; color: gold; vertical-align:bottom'>star</md-icon>
+          <div style='display: inline-block'>{{ cover.vote_count }}</div>
+        </div>-->
+      <div class='card-yt-views'>{{ cover.view_count_display }} views </div>
     </div>
-      <!--v-on:click="triggerVoteModal(cover.youtube_channel_id)" -->
     <div class='card-votes' 
       v-on:click="triggerVoteModal(index)" 
       :id='"t10-" + cover.youtube_channel_id'>
-      <md-button class="md-icon-button">
-        <md-icon>thumb_up</md-icon>
+      <md-button>
+        <span class='card-vote-count'>{{ cover.vote_count }}</span> <md-icon class='card-vote-icon'>star_border</md-icon> 
       </md-button>
-      <div class='voteCount'>{{ cover.vote_count }}</div>  
     </div>
   </div>
 
@@ -44,7 +46,7 @@ export default {
       .then(response => {
         let coverSongs = response.data.coverSongsList;
         let sortedList = coverSongs.sort( (a,b) => {
-          return b.view_count - a.view_count
+          return b.vote_count - a.vote_count
         })
         this.topCovers = sortedList.splice(0,10);
       })
@@ -109,13 +111,18 @@ export default {
   flex: 0 0 50px;
   font-size: 24px;
   padding-top: 26px;
+  background: #3F51B5;
+  color: white;
 }
 
 .card_img {
   flex: 1;
-  max-width:75px;
-  height: 75px;
+  max-width: 60px;
+  height: 60px;
   background-size: cover;
+  border-radius: 50px;
+  margin-top: 7px;
+  margin-left: 12px;
 }
 
 .card-info {
@@ -149,12 +156,28 @@ export default {
 }
 
 .card-votes {
-  flex: 0 0 50px;
-  margin-top: 6px;
-  padding-right: 8px;
+  flex: 0 0 0;
 }
 
-.card-votes i {
+.card-votes button {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  min-width: 70px
+}
+
+.card-vote-count {
+  font-size: 24px;
+}
+
+.card-vote-icon {
+  font-size: 24px;
+  vertical-align: text-bottom;
+  color: #9E9E9E
+}
+
+.md-card-actions button {
+  display: block;
   color: grey
 }
 

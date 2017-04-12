@@ -34,17 +34,18 @@
   <md-dialog ref="voteModal"
     :md-open-from="voteModal.source" 
     :md-close-to="voteModal.source">
+
+    <md-dialog-title>
+      <md-avatar class='md-large'>
+        <img :src="voteModal.coverArtistImage" :alt="voteModal.coverArtist">
+      </md-avatar>
+      <div class="dialog-artist-container">
+        <div class='dialog-coverartist'>{{ voteModal.coverArtist }}</div>
+        <div class='dialog-song'>{{ songName }} - {{ songArtist }}</div>
+      </div>
+    </md-dialog-title>
   
     <md-dialog-content>
-      <div>
-        <md-avatar>
-          <img :src="voteModal.coverArtistImage" :alt="voteModal.coverArtist">
-        </md-avatar>
-        <div class="dialog-artist-container">
-          <div class='dialog-coverartist'>{{ voteModal.coverArtist }}</div>
-          <div class='dialog-song'>{{ songName }} - {{ songArtist }}</div>
-        </div>
-      </div>
       <h5>I like this cover because...</h5>
       <md-chip 
         v-for='tag in voteModal.songTags' 
@@ -92,13 +93,13 @@ export default {
         coverSongId: '',
         songTags: [
           'Better Than The Original', 
-          'So Creative', 
           'LIT', 
-          'Baby-Making Music', 
+          'So Creative', 
+          'That Music Video',
           'Amazing Voice', 
-          'Sick Beat', 
           'They Are So Hot',
-          'That Music Video'
+          'Baby-Making Music', 
+          'Sick Beat', 
         ]
       }
     }
